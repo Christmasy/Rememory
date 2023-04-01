@@ -325,7 +325,6 @@ namespace Bot
     class Program
     {
         public static string token = "6155288247:AAGiHFris19Hf4Xk014zehTvSJKdlB0KSdw";
-        // TODO: Удалить, когда сделаем репозиторий публичным
         public static void RegisterAll(Container container)
         {
             container.RegisterSingleton<TelegramBotClient>(
