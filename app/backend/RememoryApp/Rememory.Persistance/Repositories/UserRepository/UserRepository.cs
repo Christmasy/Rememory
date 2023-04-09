@@ -1,5 +1,4 @@
-﻿using MongoDB.Driver;
-using Rememory.Persistance.Client;
+﻿using Rememory.Persistance.Client;
 using Rememory.Persistance.Entities;
 using Rememory.Persistance.Repositories.Base;
 
