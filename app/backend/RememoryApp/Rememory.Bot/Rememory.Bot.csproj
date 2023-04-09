@@ -1,14 +1,19 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Worker">
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>dotnet-Rememory.Bot-29039DF9-AF8F-4D4E-B755-8C8EF30C06E2</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="SimpleInjector" Version="5.4.1" />
-      <PackageReference Include="Telegram.Bot" Version="19.0.0-preview.2" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0-preview.2.23128.3" />
+        <PackageReference Include="Telegram.Bot" Version="19.0.0-preview.2" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Rememory.Persistance\Rememory.Persistance.csproj" />
+    </ItemGroup>
 </Project>

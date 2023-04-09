@@ -1,16 +1,22 @@
-﻿namespace Rememory.Bot;
-using System;
-using System.Threading;
 using Telegram.Bot;
+using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
-using Update = Telegram.Bot.Types.Update;
-using SimpleInjector;
 
-public class UIHandler
+namespace Rememory.Bot.Services;
+
+public class UpdateHandler : IUpdateHandler
 {
+    private readonly ILogger<UpdateHandler> _logger;
+
+    public UpdateHandler(ITelegramBotClient botClient, ILogger<UpdateHandler> logger)
+    {
+        _logger = logger;
+        client = botClient;
+    }
+    
     #region Commands
 
     private const string StartCommand = "/start";
@@ -197,7 +203,7 @@ public class UIHandler
 
     #endregion
     
-    private readonly TelegramBotClient client;
+    private readonly ITelegramBotClient client;
     private string state = "";
     private Journey journeyAdd;
     private DayDescription day;
@@ -226,123 +232,93 @@ public class UIHandler
         }
     }
 
-    public UIHandler(TelegramBotClient client)
-    {
-        this.client = client;
-    }
-    
     public async void SendTextMessage(Chat chat, string text, IReplyMarkup replyMarkup = null) =>
         await client.SendTextMessageAsync(chat, text, replyMarkup: replyMarkup);
-    
-    public void HandleUpdate(ITelegramBotClient client, Update update, CancellationToken cancellationToken)
-    {
-        try
-        {
-            if (update.Type == UpdateType.Message)
-            {
-                var messageText = update.Message.Text;
-                var telegramUser = update.Message.From;
-                var chat = update.Message.Chat;
-                if (messageText == StartCommand)
-                {
-                    SendTextMessage(chat, "Привет! Я - Rememory Travel bot. Чтобы увидеть команды нажми на кнопку “меню”");
-                    state = "";
-                }
-                else if (messageText == SiteCommand)
-                {
-                    var keyb = new InlineKeyboardButton("https://ulearn.me/");
-                    keyb.Url = "https://ulearn.me/";
-                    SendTextMessage(chat, "Для перехода на сайт нажмите кнопку", new InlineKeyboardMarkup(keyb));
-                }
-                else if (messageText == AddJourneyCommand)
-                {
-                    SendTextMessage(chat, "Введите название поездки. Можно использовать название страны или города, куда отправляетесь");
-                    journeyAdd = new Journey(messageText);
-                    state = "journey start date";
-                }
-                else if (messageText == CurrentDayCommand)
-                {
-                    var currentDay = update.Message.Date;
-                    state = "current day places";  //next bot message will be journey start date
-                    SendTextMessage(chat, "today is: "+currentDay);
-                }
-                else if (messageText == HelpCommand)
-                {
-                    SendTextMessage(chat, "Привет! Я - rememory bot... Чтобы увидеть команды нажми на кнопку “меню”");
-                    state = "";
-                }
-                else if (state != "")
-                {
-                    if (state == "current day places")
-                    {
-                        state = "current day impress";
-                        SendTextMessage(chat, "Какие места вы посетили?");
-                    }
-                    else if (state == "current day impress")
-                    {
-                        day = new DayDescription(DateTime.Today, messageText);
-                        state = "current day success";
-                        SendTextMessage(chat, "Опишите ваши впечатления");
-                    }
-                    else if (state == "current day success")
-                    {
-                        day.dayDescription = messageText;
-                        state = "";
-                        SendTextMessage(chat, "Ваш ответ сохранён");
-                        Console.WriteLine(day.day + " " + day.dayPlaces + " " + day.dayDescription);
-                    }
-                    else if (state == "journey start date")
-                    {
-                        inputDate = "";
-                        state = "journey end date";
-                        var rm = new InlineKeyboardMarkup(CreateCalendar(2023));
-                        SendTextMessage(chat, "Выберите дату начала поездки", rm);
-                    }
-                }
-                else SendTextMessage(chat, "Я тебя нэ панимаЦ!");
-            }
-            else if (update.Type == UpdateType.CallbackQuery)
-            {
-                OnCallbackQuery(update.CallbackQuery);
-            }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
-    }
-    
-    public void HandleError(ITelegramBotClient client, Exception exception, CancellationToken cancellationToken)
-    {
-        // throw exception;
-    }
-}
 
-class Program
-{
-    public static string token = "6155288247:AAGiHFris19Hf4Xk014zehTvSJKdlB0KSdw";
-    public static void RegisterAll(Container container)
+    public async Task HandleUpdateAsync(ITelegramBotClient _, Update update, CancellationToken cancellationToken)
     {
-        container.RegisterSingleton<TelegramBotClient>(
-            () => new TelegramBotClient(token));
-        container.RegisterSingleton<UIHandler>();
+        if (update.Type == UpdateType.Message)
+        {
+            var messageText = update.Message.Text;
+            var telegramUser = update.Message.From;
+            var chat = update.Message.Chat;
+            if (messageText == StartCommand)
+            {
+                SendTextMessage(chat, "Привет! Я - Rememory Travel bot. Чтобы увидеть команды нажми на кнопку “меню”");
+                state = "";
+            }
+            else if (messageText == SiteCommand)
+            {
+                var keyb = new InlineKeyboardButton("https://ulearn.me/");
+                keyb.Url = "https://ulearn.me/";
+                SendTextMessage(chat, "Для перехода на сайт нажмите кнопку", new InlineKeyboardMarkup(keyb));
+            }
+            else if (messageText == AddJourneyCommand)
+            {
+                SendTextMessage(chat, "Введите название поездки. Можно использовать название страны или города, куда отправляетесь");
+                journeyAdd = new Journey(messageText);
+                state = "journey start date";
+            }
+            else if (messageText == CurrentDayCommand)
+            {
+                var currentDay = update.Message.Date;
+                state = "current day places";  //next bot message will be journey start date
+                SendTextMessage(chat, "today is: "+currentDay);
+            }
+            else if (messageText == HelpCommand)
+            {
+                SendTextMessage(chat, "Привет! Я - rememory bot... Чтобы увидеть команды нажми на кнопку “меню”");
+                state = "";
+            }
+            else if (state != "")
+            {
+                if (state == "current day places")
+                {
+                    state = "current day impress";
+                    SendTextMessage(chat, "Какие места вы посетили?");
+                }
+                else if (state == "current day impress")
+                {
+                    day = new DayDescription(DateTime.Today, messageText);
+                    state = "current day success";
+                    SendTextMessage(chat, "Опишите ваши впечатления");
+                }
+                else if (state == "current day success")
+                {
+                    day.dayDescription = messageText;
+                    state = "";
+                    SendTextMessage(chat, "Ваш ответ сохранён");
+                    Console.WriteLine(day.day + " " + day.dayPlaces + " " + day.dayDescription);
+                }
+                else if (state == "journey start date")
+                {
+                    inputDate = "";
+                    state = "journey end date";
+                    var rm = new InlineKeyboardMarkup(CreateCalendar(2023));
+                    SendTextMessage(chat, "Выберите дату начала поездки", rm);
+                }
+            }
+            else SendTextMessage(chat, "Я тебя нэ панимаЦ!");
+        }
+        else if (update.Type == UpdateType.CallbackQuery)
+        {
+            OnCallbackQuery(update.CallbackQuery);
+        }
     }
-    
-    static void Main(string[] args)
+
+
+    public async Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
-        var container = new Container();
-        RegisterAll(container);
-        container.Verify();
-        var client = container.GetInstance<TelegramBotClient>();
-        var updateHandler = container.GetInstance<UIHandler>();
-        var cts = new CancellationTokenSource();
-        var receiverOptions = new ReceiverOptions();
-        client.StartReceiving(
-            updateHandler.HandleUpdate,
-            updateHandler.HandleError,
-            receiverOptions,
-            cts.Token);
-        Console.ReadLine();
-        cts.Cancel();
+        var errorMessage = exception switch
+        {
+            ApiRequestException apiRequestException => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
+            _ => exception.ToString()
+        };
+
+        _logger.LogInformation("HandleError: {ErrorMessage}", errorMessage);
+
+        // Cooldown in case of network connection error
+        if (exception is RequestException)
+            await Task.Delay(TimeSpan.FromSeconds(2), cancellationToken);
     }
 }
