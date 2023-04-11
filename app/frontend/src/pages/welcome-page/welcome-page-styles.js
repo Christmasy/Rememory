@@ -1,15 +1,11 @@
-import { makeStyles } from "@material-ui/core";
 import background from '../../img/background.png';
+import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 
-export const welcomePageStyles = makeStyles({
-    header: {
+export const welcomePageStyles = makeStyles((theme) =>
+createStyles({
+  appBar: {
       backgroundColor: "transparent",
-      padding: "0px 30px",
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'flex-start',
-      position: 'static',
-      justifyContent: 'space-between'
+      zIndex: theme.zIndex.drawer + 1,
     },
     back: {
       backgroundImage: `url(${background})`,
@@ -34,19 +30,6 @@ export const welcomePageStyles = makeStyles({
       justifyContent: "flex-end",
       alignItems: "flex-end"
     },
-    logotype: {
-      fontStyle: 'normal',
-      fontWeight: '400',
-      fontSize: '24px',
-      lineHeight: '40px',
-      display: 'flex',
-      alignItems: 'center',
-      letterSpacing: '0.25px',
-      flex: 'none',
-      order: 0,
-      alignSelf: 'stretch',
-      flexGrow: 1
-    },
     bigMainText: {
       position: 'relative',
       top: '50px',
@@ -68,4 +51,5 @@ export const welcomePageStyles = makeStyles({
       lineHeight: '50px',
       color: '#FFFFFF'
     }
-  });
+  }),
+);
