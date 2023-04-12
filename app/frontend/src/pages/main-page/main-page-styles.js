@@ -1,18 +1,30 @@
-import { makeStyles } from "@material-ui/core";
+import { createStyles, makeStyles } from '@material-ui/core/styles';
 
-export const mainPageStyles = makeStyles((theme) => ({
+const drawerWidth = 240;
+
+export const mainPageStyles = makeStyles((theme) =>
+  createStyles({
     root: {
-      height: "100vh",
-      width: "100vw",
-      backgroundColor: "blue"
+      display: 'flex',
     },
-  
-    mainArea: {
-      padding: theme.spacing(0),
-      textAlign: "center",
-      color: theme.palette.text.primary,
-      background: "aqua",
-      height: "100%",
-      border: "5px solid brown"
+    appBar: {
+      zIndex: theme.zIndex.drawer + 1,
+      background: '#009688',
+      height: '64px',
+    },
+    drawer: {
+      width: drawerWidth,
+      flexShrink: 0,
+    },
+    drawerPaper: {
+      width: drawerWidth,
+    },
+    drawerContainer: {
+      overflow: 'auto',
+    },
+    content: {
+      flexGrow: 1,
+      padding: theme.spacing(3),
     }
-}));
+  }),
+);

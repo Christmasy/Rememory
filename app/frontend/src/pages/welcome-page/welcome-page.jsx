@@ -1,13 +1,19 @@
-import { Button, Toolbar, Typography, Paper, Grid } from '@material-ui/core';
-import { AppBar } from '@material-ui/core';
+
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 import { welcomePageStyles } from '../welcome-page/welcome-page-styles';
 import OutlinedCard from '../../components/advantage-card/advantage-card';
 import Logotype from '../../components/logotype/logotype';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 export default function WelcomePage() {
     const classes = welcomePageStyles();
     return (
-        <Paper className={classes.back}>
+        <div className={classes.root}>
+            <CssBaseline />
           <AppBar className={classes.appBar}>
             <Toolbar>
               <Logotype/>
@@ -36,6 +42,6 @@ export default function WelcomePage() {
             </Typography>
           </Grid>
           <OutlinedCard/>
-        </Paper>
+        </div>
     );
 }

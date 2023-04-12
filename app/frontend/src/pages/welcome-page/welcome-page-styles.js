@@ -1,16 +1,16 @@
 import background from '../../img/background.png';
-import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
 
 export const welcomePageStyles = makeStyles((theme) =>
-createStyles({
-  appBar: {
-      backgroundColor: "transparent",
-      zIndex: theme.zIndex.drawer + 1,
-    },
-    back: {
+  createStyles({
+    root: {
       backgroundImage: `url(${background})`,
       height: '100vh',
       width: '100vw'
+    },
+    appBar: {
+      backgroundColor: "transparent",
+      height: '64px',
     },
     button: {
       border: '1px solid rgba(255, 255, 255, 0.5)',
