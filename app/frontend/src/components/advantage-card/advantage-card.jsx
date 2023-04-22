@@ -3,7 +3,7 @@ import { Card, CardContent, Typography, Box } from '@material-ui/core';
 import { advantageCardStyles } from './advantage-card-styles';
 import { CalendarToday } from '@material-ui/icons';
 
-export default function OutlinedCard() {
+export default function AdvantageCard() {
   const classes = advantageCardStyles();
   return (
     <Box className={classes.box}>

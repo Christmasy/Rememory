@@ -25,6 +25,22 @@ export const mainPageStyles = makeStyles((theme) =>
     content: {
       flexGrow: 1,
       padding: theme.spacing(3),
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center' 
+    },
+    textField1: {
+      width: '900px',
+      margin: 0
+    },
+    textField2: {
+      width: '900px',
+      margin: 0
+    },
+    saveBtn: {
+      border: '1px solid #06D9C5',
+      borderRadius: '4px',
+      color: '#FFFFFF'
     }
   }),
 );

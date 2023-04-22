@@ -14,7 +14,8 @@ export const welcomePageStyles = makeStyles((theme) =>
     },
     button: {
       border: '1px solid rgba(255, 255, 255, 0.5)',
-      borderRadius: '4px'
+      borderRadius: '4px',
+      color: '#FFFFFF'
     },
     title: {
       fontStyle: 'normal',
@@ -30,9 +31,11 @@ export const welcomePageStyles = makeStyles((theme) =>
       justifyContent: "flex-end",
       alignItems: "flex-end"
     },
-    bigMainText: {
+    content: {
       position: 'relative',
-      top: '50px',
+      top: '150px',
+    },
+    bigMainText: {
       display: 'flex',
       fontStyle: 'normal',
       fontWeight: '400',
@@ -43,7 +46,7 @@ export const welcomePageStyles = makeStyles((theme) =>
     },
     smallMainText: {
       position: 'relative',
-      top: '60px',
+      top: '10px',
       display: 'flex',
       fontStyle: 'normal',
       fontWeight: '400',

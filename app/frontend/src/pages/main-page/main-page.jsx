@@ -10,9 +10,32 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
 import { mainPageStyles } from './main-page-styles';
+import { TextField } from '@material-ui/core';
+import { Input } from '@mui/material';
+
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
+/*import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';*/
 
 export default function MainPage() {
   const classes = mainPageStyles();
+
+  const [open, setOpen] = React.useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <div className={classes.root}>
@@ -31,6 +54,33 @@ export default function MainPage() {
       >
         <Toolbar />
         <div className={classes.drawerContainer}>
+          <Button variant="outlined" className={classes.saveBtn} onClick={handleClickOpen}>
+            Добавить новую поездку
+          </Button>
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Новая поездка"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Задайте параметры поездки
+              </DialogContentText>
+              <TextField
+                id="input-slot"
+                label="Название поездки"
+                type="input"
+                variant="standard"
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button variant="outlined" className={classes.saveBtn} onClick={handleClose}>Сохранить</Button>
+            </DialogActions>
+          </Dialog>
             <TreeView
                 aria-label="file system navigator"
                 defaultCollapseIcon={<ExpandMoreIcon />}
@@ -51,9 +101,26 @@ export default function MainPage() {
       </Drawer>
       <main className={classes.content}>
         <Toolbar />
-        <Typography paragraph>
-          Lorem
-        </Typography>
+        <TextField
+          id="filled-multiline-static"
+          label="Multiline"
+          multiline
+          rows={4}
+          defaultValue="Default Value"
+          variant="filled"
+          className={classes.textField1}
+        />
+        <TextField
+          id="filled-multiline-static"
+          label="Multiline"
+          multiline
+          rows={15}
+          defaultValue="Default Value"
+          variant="filled"
+          className={classes.textField}
+        />
+        <div>
+      </div>
       </main>
     </div>
   );
