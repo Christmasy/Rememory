@@ -1,6 +1,7 @@
 import { createStyles, makeStyles } from '@material-ui/core/styles';
+import background from '../../img/left.png';
 
-const drawerWidth = 240;
+const drawerWidth = 350;
 
 export const mainPageStyles = makeStyles((theme) =>
   createStyles({
@@ -18,29 +19,24 @@ export const mainPageStyles = makeStyles((theme) =>
     },
     drawerPaper: {
       width: drawerWidth,
+      backgroundImage: `url(${background})`,
     },
     drawerContainer: {
       overflow: 'auto',
+      display: 'flex',
+      flexDirection: 'column'
     },
     content: {
       flexGrow: 1,
       padding: theme.spacing(3),
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center' 
+      justifyContent: 'center',
+      flexDirection: 'column'
     },
-    textField1: {
+    textField: {
       width: '900px',
-      margin: 0
-    },
-    textField2: {
-      width: '900px',
-      margin: 0
-    },
-    saveBtn: {
-      border: '1px solid #06D9C5',
-      borderRadius: '4px',
-      color: '#FFFFFF'
+      marginBottom: '30px'
     }
   }),
 );

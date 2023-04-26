@@ -13,12 +13,10 @@ import { mainPageStyles } from './main-page-styles';
 import { TextField } from '@material-ui/core';
 import { Input } from '@mui/material';
 
+import ModalWindow from '../../components/modal-window/modal-window';
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import SettingsIcon from '@mui/icons-material/Settings';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 /*import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -27,22 +25,27 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';*/
 
 export default function MainPage() {
   const classes = mainPageStyles();
-
-  const [open, setOpen] = React.useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
     <div className={classes.root}>
       <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <Logotype/>
+            <div>
+            <Button variant="outlined" startIcon={<SettingsIcon />}
+              style={{border: '1px solid rgba(255, 255, 255, 0.5)',
+                    color: 'rgba(255, 255, 255, 1)',
+                    marginRight: '10px'}}
+            >
+              Настройки
+            </Button>
+            <Button variant="outlined" startIcon={<AccountCircleIcon />}
+              style={{border: '1px solid rgba(255, 255, 255, 0.5)',
+                    color: 'rgba(255, 255, 255, 1)'}}
+            >
+              Юлия Алексеева
+            </Button>
+            </div>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -54,49 +57,21 @@ export default function MainPage() {
       >
         <Toolbar />
         <div className={classes.drawerContainer}>
-          <Button variant="outlined" className={classes.saveBtn} onClick={handleClickOpen}>
-            Добавить новую поездку
-          </Button>
-          <Dialog
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
-            <DialogTitle id="alert-dialog-title">
-              {"Новая поездка"}
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                Задайте параметры поездки
-              </DialogContentText>
-              <TextField
-                id="input-slot"
-                label="Название поездки"
-                type="input"
-                variant="standard"
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button variant="outlined" className={classes.saveBtn} onClick={handleClose}>Сохранить</Button>
-            </DialogActions>
-          </Dialog>
-            <TreeView
-                aria-label="file system navigator"
-                defaultCollapseIcon={<ExpandMoreIcon />}
-                defaultExpandIcon={<ChevronRightIcon />}
-                sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
-                >
-                <TreeItem nodeId="1" label="Applications">
-                    <TreeItem nodeId="2" label="Calendar" />
-                </TreeItem>
-                <TreeItem nodeId="5" label="Documents">
-                    <TreeItem nodeId="10" label="OSS" />
-                    <TreeItem nodeId="6" label="MUI">
-                    <TreeItem nodeId="8" label="index.js" />
-                    </TreeItem>
-                </TreeItem>
-            </TreeView>
+          <ModalWindow/>
+          <TreeView
+              aria-label="file system navigator"
+              defaultCollapseIcon={<ExpandMoreIcon />}
+              defaultExpandIcon={<ChevronRightIcon />}
+              sx={{ height: 240, flexGrow: 1, maxWidth: 350, overflowY: 'auto', fontWeight: 500, color: '#FFFFFF' }}
+              >
+              <TreeItem nodeId="1" label="Франция, Париж, 2013">
+              </TreeItem>
+              <TreeItem nodeId="5" label="Италия, 2010">
+                  <TreeItem nodeId="10" label="День 1. 24.11.2010" />
+                  <TreeItem nodeId="6" label="День 2. 25.11.2010" />
+                  <TreeItem nodeId="8" label="День 3. 26.11.2010" />
+              </TreeItem>
+          </TreeView>
         </div>
       </Drawer>
       <main className={classes.content}>
@@ -105,20 +80,38 @@ export default function MainPage() {
           id="filled-multiline-static"
           label="Multiline"
           multiline
-          rows={4}
-          defaultValue="Default Value"
+          rows={1}
           variant="filled"
-          className={classes.textField1}
+          className={classes.textField}
+          margin="normal"
         />
         <TextField
           id="filled-multiline-static"
           label="Multiline"
           multiline
-          rows={15}
-          defaultValue="Default Value"
+          rows={4}
           variant="filled"
           className={classes.textField}
+          margin="normal"
         />
+        <TextField
+          id="filled-multiline-static"
+          label="Расскажите о событиях"
+          multiline
+          rows={15}
+          variant="filled"
+          className={classes.textField}
+          margin="normal"
+        />
+        <Button variant="outlined"
+          style={{border: '1px solid rgba(3, 116, 105, 1)',
+          color: 'rgba(3, 116, 105, 1)',
+          width: '200px',
+          margin: '0 auto',
+          backgroundColor: 'rgba(255, 255, 255, 0.85)',
+          marginTop: '20px'}}>
+            Сохранить
+        </Button>
         <div>
       </div>
       </main>
