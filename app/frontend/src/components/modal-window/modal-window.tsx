@@ -1,4 +1,3 @@
-import { modalWindowStyles } from '../modal-window/modal-window-styles'
 import { Typography } from '@material-ui/core';
 
 import Button from '@mui/material/Button';
@@ -8,8 +7,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import React from 'react';
+import * as React from 'react';
 import { TextField } from '@material-ui/core';
+
+import styles from './modal-window.module.css';
 
 export default function ModalWindow() {
   const [open, setOpen] = React.useState(false);
@@ -20,7 +21,6 @@ export default function ModalWindow() {
   const handleClose = () => {
       setOpen(false);
   };
-  const classes = modalWindowStyles();
   return (
     <>
     <Button variant="outlined" onClick={handleClickOpen}
@@ -38,13 +38,13 @@ export default function ModalWindow() {
             onClose={handleClose}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
-            classes={{ paper: classes.dialogPaper }}
+            classes={{ paper: styles.dialogPaper }}
           >
-            <DialogTitle id="alert-dialog-title" className={classes.dialogTitle}>
+            <DialogTitle id="alert-dialog-title" className={styles.dialogTitle}>
               {"Новая поездка"}
             </DialogTitle>
             <DialogContent>
-              <DialogContentText id="alert-dialog-description" className={classes.dialogContentText}>
+              <DialogContentText id="alert-dialog-description" className={styles.dialogContentText}>
                 Задайте параметры поездки
               </DialogContentText>
               <TextField

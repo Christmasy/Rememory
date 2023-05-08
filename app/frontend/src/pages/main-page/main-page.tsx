@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -9,7 +9,7 @@ import TreeView from '@mui/lab/TreeView';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
-import { mainPageStyles } from './main-page-styles';
+/*import { mainPageStyles } from './main-page-styles';*/
 import { TextField } from '@material-ui/core';
 import { Input } from '@mui/material';
 
@@ -18,17 +18,41 @@ import Button from '@mui/material/Button';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
+import { useEffect, useState } from "react";
+
+import { getUsers} from "../../server-api/server-api";
+import styles from './main-page.module.css';
+
 /*import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';*/
 
 export default function MainPage() {
-  const classes = mainPageStyles();
+    const [date, setDate] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
+    const [visitedPlaces, setVisitedPlaces] = useState<string>('');
+
+    useEffect(() => {
+        getUsers().then((res) => {
+            console.log(res);
+            console.log(res.status);
+            console.log(res.json());
+            if (res.status === 200) {
+                res.json().then(({id, journeyId, date, visitedPlaces, description
+                                 }) => {
+                    setDate(date);
+                    setVisitedPlaces(visitedPlaces);
+                    setDescription(description);
+                });
+            }
+        });
+    }, []);
+
   return (
-    <div className={classes.root}>
+    <div className={styles.root}>
       <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar position="fixed" className={styles.appBar}>
         <Toolbar>
           <Logotype/>
             <div>
@@ -49,14 +73,14 @@ export default function MainPage() {
         </Toolbar>
       </AppBar>
       <Drawer
-        className={classes.drawer}
+        className={styles.drawer}
         variant="permanent"
         classes={{
-          paper: classes.drawerPaper,
+          paper: styles.drawerPaper,
         }}
       >
         <Toolbar />
-        <div className={classes.drawerContainer}>
+        <div className={styles.drawerContainer}>
           <ModalWindow/>
           <TreeView
               aria-label="file system navigator"
@@ -74,33 +98,36 @@ export default function MainPage() {
           </TreeView>
         </div>
       </Drawer>
-      <main className={classes.content}>
+      <main className={styles.content}>
         <Toolbar />
         <TextField
           id="filled-multiline-static"
-          label="Multiline"
+          value={date}
+          label="Дата"
           multiline
-          rows={1}
+          minRows={1}
           variant="filled"
-          className={classes.textField}
+          className={styles.textField}
           margin="normal"
         />
         <TextField
           id="filled-multiline-static"
-          label="Multiline"
+          value={visitedPlaces}
+          label="Место"
           multiline
-          rows={4}
+          minRows={4}
           variant="filled"
-          className={classes.textField}
+          className={styles.textField}
           margin="normal"
         />
         <TextField
           id="filled-multiline-static"
+          value={description}
           label="Расскажите о событиях"
           multiline
-          rows={15}
+          minRows={15}
           variant="filled"
-          className={classes.textField}
+          className={styles.textField}
           margin="normal"
         />
         <Button variant="outlined"
@@ -116,5 +143,5 @@ export default function MainPage() {
       </div>
       </main>
     </div>
-  );
-}
+  )
+};

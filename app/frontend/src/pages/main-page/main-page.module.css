@@ -1,0 +1,39 @@
+.root {
+    display: flex;
+}
+
+.appBar {
+    z-index: 1100;
+    background-color: #009688;
+    height: 64px;
+}
+
+.drawer {
+    width: 350px;
+    flex-shrink: 0;
+}
+
+.drawerPaper {
+    width: 350px;
+    background-image: url('../../img/left.png');
+}
+
+.drawerContainer {
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex-grow: 1;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.textField {
+    width: 900px;
+    margin-bottom: 30px;
+}
