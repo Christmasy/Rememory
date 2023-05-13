@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { Card, CardContent, Typography, Box } from '@material-ui/core';
+import { Card, CardContent, Typography } from '@material-ui/core';
 import { useStyles } from './advatage-card-styles';
 import { CalendarToday } from '@material-ui/icons';
+import Box from '@mui/material/Box';
 
 export default function AdvantageCard() {
   const classes = useStyles();
