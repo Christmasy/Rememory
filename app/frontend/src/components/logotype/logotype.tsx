@@ -1,10 +1,10 @@
-import styles from './logotype.module.css';
+import { useStyles } from '../logotype/logotype-styles'
 import { Typography } from '@material-ui/core';
-import React from 'react'
 
 export default function Logotype() {
+  const classes = useStyles();
   return (
-    <Typography className={styles.logotype} variant="h6">
+    <Typography className={classes.logotype} variant="h6">
       ReMemory
     </Typography>
   );

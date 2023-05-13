@@ -1,18 +1,19 @@
-import { Typography } from '@material-ui/core';
-
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-
 import * as React from 'react';
 import { TextField } from '@material-ui/core';
-
-import styles from './modal-window.module.css';
+import { useStyles } from './modal-window-styles';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 export default function ModalWindow() {
+  const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
       setOpen(true);
@@ -38,13 +39,13 @@ export default function ModalWindow() {
             onClose={handleClose}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
-            classes={{ paper: styles.dialogPaper }}
+            classes={{ paper: "dialogPaper" }}
           >
-            <DialogTitle id="alert-dialog-title" className={styles.dialogTitle}>
+            <DialogTitle id="alert-dialog-title" className={classes.dialogTitle}>
               {"Новая поездка"}
             </DialogTitle>
             <DialogContent>
-              <DialogContentText id="alert-dialog-description" className={styles.dialogContentText}>
+              <DialogContentText id="alert-dialog-description" className={classes.dialogContentText}>
                 Задайте параметры поездки
               </DialogContentText>
               <TextField
@@ -53,6 +54,16 @@ export default function ModalWindow() {
                 type="input"
                 variant="standard"
               />
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={['DatePicker']}>
+                  <DatePicker label="Выберите дату начала поездки" />
+                </DemoContainer>
+              </LocalizationProvider>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={['DatePicker']}>
+                  <DatePicker label="Выберите дату конца поездки" />
+                </DemoContainer>
+              </LocalizationProvider>
             </DialogContent>
             <DialogActions>
               <Button variant="outlined" onClick={handleClose}

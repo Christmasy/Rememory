@@ -3,32 +3,22 @@ import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import Logotype from '../../components/logotype/logotype';
 import TreeView from '@mui/lab/TreeView';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
-/*import { mainPageStyles } from './main-page-styles';*/
 import { TextField } from '@material-ui/core';
-import { Input } from '@mui/material';
-
 import ModalWindow from '../../components/modal-window/modal-window';
 import Button from '@mui/material/Button';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-
 import { useEffect, useState } from "react";
-
-import { getUsers} from "../../server-api/server-api";
-import styles from './main-page.module.css';
-
-/*import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';*/
+import { getUsers } from "../../server-api/server-api";
+import useStyles from './main-page-styles';
 
 export default function MainPage() {
+    const classes = useStyles();
     const [date, setDate] = useState<string>('');
     const [description, setDescription] = useState<string>('');
     const [visitedPlaces, setVisitedPlaces] = useState<string>('');
@@ -50,9 +40,9 @@ export default function MainPage() {
     }, []);
 
   return (
-    <div className={styles.root}>
+    <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="fixed" className={styles.appBar}>
+      <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <Logotype/>
             <div>
@@ -73,14 +63,14 @@ export default function MainPage() {
         </Toolbar>
       </AppBar>
       <Drawer
-        className={styles.drawer}
+        className={classes.drawer}
         variant="permanent"
         classes={{
-          paper: styles.drawerPaper,
+          paper: "drawerPaper",
         }}
       >
         <Toolbar />
-        <div className={styles.drawerContainer}>
+        <div className={classes.drawerPaper}>
           <ModalWindow/>
           <TreeView
               aria-label="file system navigator"
@@ -98,7 +88,7 @@ export default function MainPage() {
           </TreeView>
         </div>
       </Drawer>
-      <main className={styles.content}>
+      <main className={classes.content}>
         <Toolbar />
         <TextField
           id="filled-multiline-static"
@@ -107,7 +97,7 @@ export default function MainPage() {
           multiline
           minRows={1}
           variant="filled"
-          className={styles.textField}
+          className={classes.textField}
           margin="normal"
         />
         <TextField
@@ -117,7 +107,7 @@ export default function MainPage() {
           multiline
           minRows={4}
           variant="filled"
-          className={styles.textField}
+          className={classes.textField}
           margin="normal"
         />
         <TextField
@@ -127,7 +117,7 @@ export default function MainPage() {
           multiline
           minRows={15}
           variant="filled"
-          className={styles.textField}
+          className={classes.textField}
           margin="normal"
         />
         <Button variant="outlined"
