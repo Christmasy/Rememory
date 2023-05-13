@@ -5,7 +5,7 @@ const handleTelegramResponse = (user: TelegramUser) => {
     console.log(user);
 };
 
-function App() {
+function LoginPage() {
     return (
         <div
             style={{
@@ -19,9 +19,9 @@ function App() {
         >
             <b>Shalom!</b>
             <br />
-            <TelegramLoginButton dataOnAuth={handleTelegramResponse} botName="Rememory_Travel_bot" />
+            <TelegramLoginButton dataOnAuth={handleTelegramResponse} botName="lou_bookkeeper_dev_bot" />
         </div>
     );
 }
 
-export default App;
+export default LoginPage;
