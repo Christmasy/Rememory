@@ -14,7 +14,7 @@ import Button from '@mui/material/Button';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useEffect, useState } from "react";
-import { getUsers } from "../../server-api/server-api";
+import { getUsers, getUsers2 } from "../../server-api/server-api";
 import useStyles from './main-page-styles';
 
 export default function MainPage() {
@@ -24,19 +24,20 @@ export default function MainPage() {
     const [visitedPlaces, setVisitedPlaces] = useState<string>('');
 
     useEffect(() => {
-        getUsers().then((res) => {
-            console.log(res);
-            console.log(res.status);
-            console.log(res.json());
-            if (res.status === 200) {
-                res.json().then(({id, journeyId, date, visitedPlaces, description
-                                 }) => {
-                    setDate(date);
-                    setVisitedPlaces(visitedPlaces);
-                    setDescription(description);
-                });
-            }
-        });
+      console.log(getUsers2());
+      /*getUsers().then((res) => {
+        console.log(res);
+        console.log(res.status);
+        console.log(res.json());
+        if (res.status === 200) {
+          res.json().then(({id, journeyId, date, visitedPlaces, description
+                            }) => {
+            setDate(date);
+            setVisitedPlaces(visitedPlaces);
+            setDescription(description);
+          });
+        }
+      });*/
     }, []);
 
   return (
