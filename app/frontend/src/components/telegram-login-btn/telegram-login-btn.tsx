@@ -1,6 +1,10 @@
 // @flow
-import React from "react";
+import React, { Context } from "react";
 import PropTypes from "prop-types";
+import { login } from "../../utils/login";
+import { NavigateFunction, NavigateProps, RouterProps, useNavigate } from "react-router-dom";
+import AppContext, { appContext } from "../app-context/app-context";
+import { JsxElement } from "typescript";
 
 interface Props {
   botName: string;
@@ -14,12 +18,14 @@ interface Props {
   widgetVersion?: number;
   className?: string;
   children?: React.ReactNode;
+  navigate: NavigateFunction;
+  //contextType: JsxElement;
 }
 
 export class TelegramLoginButton extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-  }
+  //readonly navigate = useNavigate();
+  static contextType = appContext;
+  readonly context!: React.ContextType<typeof AppContext>
 
   componentDidMount() {
     const {
@@ -34,7 +40,10 @@ export class TelegramLoginButton extends React.Component<Props> {
       widgetVersion,
     } = this.props;
     window.TelegramLoginWidget = {
-      dataOnauth: (user: any) => dataOnauth && dataOnauth(user),
+      dataOnauth: (user: any) => {
+        dataOnauth && dataOnauth(user);
+        login(user.id, this.props.navigate, this.context.setNewState);
+      },
     };
 
     const script = document.createElement("script");

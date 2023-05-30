@@ -13,9 +13,12 @@ import ModalWindow from '../../components/modal-window/modal-window';
 import Button from '@mui/material/Button';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { useEffect, useState } from "react";
-import { getUsers, getUsers2 } from "../../server-api/server-api";
+import { useEffect, useState, useContext } from "react";
+import { getCurrentUser, getUsers, getUsers2 } from "../../server-api/server-api";
 import useStyles from './main-page-styles';
+import { withAuth } from '../../utils/auth';
+import { useNavigate } from 'react-router-dom';
+import { appContext } from '../../components/app-context/app-context';
 
 export default function MainPage() {
     const classes = useStyles();
@@ -23,8 +26,13 @@ export default function MainPage() {
     const [description, setDescription] = useState<string>('');
     const [visitedPlaces, setVisitedPlaces] = useState<string>('');
 
+    const navigate = useNavigate();
+    const {setNewState} = useContext(appContext);
+
     useEffect(() => {
-      console.log(getUsers2());
+      withAuth(navigate, setNewState, getCurrentUser).then(async (res) => {
+        console.log(await res?.text());
+      });
       /*getUsers().then((res) => {
         console.log(res);
         console.log(res.status);

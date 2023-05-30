@@ -7,8 +7,6 @@ export const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     width: '100%',
     height: '100%'
-  },
-  loginBtn: {
   }
 }));
 

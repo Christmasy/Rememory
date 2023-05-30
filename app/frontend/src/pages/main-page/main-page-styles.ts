@@ -17,7 +17,9 @@ export const useStyles = makeStyles((theme) => ({
   },
   drawerPaper: {
     width: 350,
-    backgroundImage: `url(${background})`
+    backgroundImage: `url(${background})`,
+    display: 'flex',
+    flexDirection: 'column'
   },
   drawerContainer: {
     overflow: 'auto',
