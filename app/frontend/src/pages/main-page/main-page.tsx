@@ -14,7 +14,7 @@ import Button from '@mui/material/Button';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useEffect, useState, useContext } from "react";
-import { getCurrentUser, getUsers, getUsers2 } from "../../server-api/server-api";
+import { getCurrentUser } from "../../server-api/server-api";
 import useStyles from './main-page-styles';
 import { withAuth } from '../../utils/auth';
 import { useNavigate } from 'react-router-dom';

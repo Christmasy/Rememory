@@ -20,4 +20,4 @@ function AppContext(props: any) {
   return <appContext.Provider value={{state, setNewState}}>{props.children}</appContext.Provider>
 }
 
-export default (AppContext as any as Context<any>);
+export default AppContext;

@@ -25,7 +25,7 @@ interface Props {
 export class TelegramLoginButton extends React.Component<Props> {
   //readonly navigate = useNavigate();
   static contextType = appContext;
-  readonly context!: React.ContextType<typeof AppContext>
+  readonly context!: React.ContextType<typeof appContext>
 
   componentDidMount() {
     const {
@@ -42,7 +42,8 @@ export class TelegramLoginButton extends React.Component<Props> {
     window.TelegramLoginWidget = {
       dataOnauth: (user: any) => {
         dataOnauth && dataOnauth(user);
-        login(user.id, this.props.navigate, this.context.setNewState);
+        console.log(this.context);
+        login(user, this.props.navigate, this.context.setNewState);
       },
     };
 

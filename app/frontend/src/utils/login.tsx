@@ -3,7 +3,7 @@ import { getDeviceId } from './generate-deviceId';
 
 export async function login(
   user: {
-    id: string,
+    id: number,
     first_name: string,
     last_name: string,
     username: string,
@@ -14,15 +14,20 @@ export async function login(
   navigate: NavigateFunction,
   setState: (acessToken: string) => void,
 ){
-  const result = await fetch('/api/login', {
+  console.log('q');
+  console.log(user);
+  let deviceId = localStorage.getItem('deviceId');
+  if(!deviceId) {
+    deviceId = getDeviceId();
+    localStorage.setItem('deviceId', deviceId);
+  }
+  const result = await fetch('/api/Auth/login', {
     method:'POST',
     body:JSON.stringify(user),
-    headers:{'Content-Type':'application/json'}
+    headers:{'Content-Type':'application/json', 'DeviceId':deviceId}
   });
-  const [acessToken, refreshToken] = (await result.json()).data;
-  setState(acessToken);
+  const {accessToken, refreshToken} = await result.json();
+  setState(accessToken);
   localStorage.setItem('refreshToken', refreshToken);
-  const deviceId = getDeviceId(); // куда сохранять
-  localStorage.setItem('deviceId', deviceId);
   navigate('/main');
 }

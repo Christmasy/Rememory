@@ -1,6 +1,11 @@
 import jwt_decode from "jwt-decode";
 import { NavigateFunction } from 'react-router-dom';
 
+export function jwtDecode(token: string) {
+    const base64 = token.split(".");
+    const
+}
+
 export class NavigateResponse {
     public readonly path: string;
 
@@ -35,7 +40,7 @@ export async function request(
             return new NavigateResponse('/');
         }
         
-        const refreshResult = await fetch('/api/refresh', {
+        const refreshResult = await fetch('/api/Auth/refresh', {
             method:'POST',
             body:JSON.stringify({refreshToken: localStorage.getItem('refreshToken'), deviceId: localStorage.getItem('deviceId')}),
             headers:{'Content-Type':'application/json'}
