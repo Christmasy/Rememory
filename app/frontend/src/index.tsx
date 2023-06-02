@@ -1,31 +1,17 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './app';
 import AppContext from './components/app-context/app-context';
 import { BrowserRouter } from 'react-router-dom';
+import ReactDOM from 'react-dom';
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
-root.render(
+ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <AppContext>
         <App />
       </AppContext>
     </BrowserRouter>
-  </React.StrictMode>
+  </React.StrictMode>,
+  document.getElementById('root')
 );
-
-/*import React from 'react';
-import * as ReactDOM from 'react-dom/client';
-import { TelegramLoginButton } from './components/telegram-login-btn/telegram-login-btn';
- 
-const handleTelegramResponse = (response: any) => {
-  console.log(response);
-};
-
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
-root.render(
-  <TelegramLoginButton dataOnauth={handleTelegramResponse} botName="RememoryBotBot" buttonSize= "large" requestAccess= "write" usePic={true} lang= "en" widgetVersion={9}/>,
-  //document.getElementById('telegramButton')
-);*/

@@ -1,5 +1,5 @@
 import { useStyles } from '../logotype/logotype-styles'
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 
 export default function Logotype() {
   const classes = useStyles();

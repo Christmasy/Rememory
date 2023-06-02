@@ -1,10 +1,10 @@
 import jwt_decode from "jwt-decode";
 import { NavigateFunction } from 'react-router-dom';
 
-export function jwtDecode(token: string) {
+/*export function jwtDecode(token: string) {
     const base64 = token.split(".");
     const
-}
+}*/
 
 export class NavigateResponse {
     public readonly path: string;

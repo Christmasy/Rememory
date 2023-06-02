@@ -1,14 +1,10 @@
 import * as React from 'react';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Toolbar from '@material-ui/core/Toolbar';
+import { Drawer, AppBar, CssBaseline, Toolbar, TextField } from '@mui/material';
 import Logotype from '../../components/logotype/logotype';
 import TreeView from '@mui/lab/TreeView';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
-import { TextField } from '@material-ui/core';
 import ModalWindow from '../../components/modal-window/modal-window';
 import Button from '@mui/material/Button';
 import SettingsIcon from '@mui/icons-material/Settings';

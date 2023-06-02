@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 // @ts-ignore
 import background from '../../img/left.png';
 
@@ -7,7 +7,7 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
   },
   appBar: {
-    zIndex: theme.zIndex.drawer + 1,
+    //zIndex: theme.zIndex.drawer + 1,
     backgroundColor: '#009688',
     height: '64px',
   },
@@ -28,7 +28,7 @@ export const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
+    padding: '24px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
