@@ -10,7 +10,7 @@ export default function LoginPage() {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <TelegramLoginButton navigate={useNavigate()} dataOnauth={handleTelegramResponse} botName="RememoryBotBot" buttonSize= "large" requestAccess= "write" usePic={true} lang= "en" widgetVersion={9}/>
+      <TelegramLoginButton navigate={useNavigate()} dataAuthUrl={'rememory-3zi9qen4f-christmasy.vercel'} dataOnauth={handleTelegramResponse} botName="RememoryBotBot" buttonSize= "large" requestAccess= "write" usePic={true} lang= "en" widgetVersion={9}/>
     </div>
   );
 }
