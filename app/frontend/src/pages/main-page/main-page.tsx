@@ -11,13 +11,14 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useEffect, useState, useContext } from "react";
 import { getCurrentUser } from "../../server-api/server-api";
-import useStyles from './main-page-styles';
+//import useStyles from './main-page-styles';
 import { withAuth } from '../../utils/auth';
 import { useNavigate } from 'react-router-dom';
 import { appContext } from '../../components/app-context/app-context';
+// @ts-ignore
+import background from '../../img/left.png';
 
 export default function MainPage() {
-    const classes = useStyles();
     const [date, setDate] = useState<string>('');
     const [description, setDescription] = useState<string>('');
     const [visitedPlaces, setVisitedPlaces] = useState<string>('');
@@ -45,22 +46,37 @@ export default function MainPage() {
     }, []);
 
   return (
-    <div className={classes.root}>
+    <div style={{display: 'flex'}}>
       <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar
+        position="fixed"
+        sx={{
+          backgroundColor: '#009688',
+          height: '64px',
+          zIndex: (theme) => theme.zIndex.drawer + 1
+        }}
+      >
         <Toolbar>
           <Logotype/>
             <div>
-            <Button variant="outlined" startIcon={<SettingsIcon />}
-              style={{border: '1px solid rgba(255, 255, 255, 0.5)',
-                    color: 'rgba(255, 255, 255, 1)',
-                    marginRight: '10px'}}
+            <Button
+              variant="outlined"
+              startIcon={<SettingsIcon />}
+              style={{
+                border: '1px solid rgba(255, 255, 255, 0.5)',
+                color: 'rgba(255, 255, 255, 1)',
+                marginRight: '10px'
+              }}
             >
               Настройки
             </Button>
-            <Button variant="outlined" startIcon={<AccountCircleIcon />}
-              style={{border: '1px solid rgba(255, 255, 255, 0.5)',
-                    color: 'rgba(255, 255, 255, 1)'}}
+            <Button
+              variant="outlined"
+              startIcon={<AccountCircleIcon />}
+              style={{
+                border: '1px solid rgba(255, 255, 255, 0.5)',
+                color: 'rgba(255, 255, 255, 1)'
+              }}
             >
               Юлия Алексеева
             </Button>
@@ -68,21 +84,37 @@ export default function MainPage() {
         </Toolbar>
       </AppBar>
       <Drawer
-        className={classes.drawer}
+        sx={{
+          width: 350,
+          flexShrink: 0
+        }}
         variant="permanent"
         classes={{
           paper: "drawerPaper",
         }}
       >
         <Toolbar />
-        <div className={classes.drawerPaper}>
+        <div style={{
+            width: 350,
+            backgroundImage: `url(${background})`,
+            display: 'flex',
+            flexDirection: 'column'
+          }}
+        >
           <ModalWindow/>
           <TreeView
               aria-label="file system navigator"
               defaultCollapseIcon={<ExpandMoreIcon />}
               defaultExpandIcon={<ChevronRightIcon />}
-              sx={{ height: 240, flexGrow: 1, maxWidth: 350, overflowY: 'auto', fontWeight: 500, color: '#FFFFFF' }}
-              >
+              sx={{
+                height: 240,
+                flexGrow: 1,
+                maxWidth: 350,
+                overflowY: 'auto',
+                fontWeight: 500,
+                color: '#FFFFFF'
+              }}
+          >
               <TreeItem nodeId="1" label="Франция, Париж, 2013">
               </TreeItem>
               <TreeItem nodeId="5" label="Италия, 2010">
@@ -93,7 +125,15 @@ export default function MainPage() {
           </TreeView>
         </div>
       </Drawer>
-      <main className={classes.content}>
+      <main style={{
+          flexGrow: 1,
+          padding: '24px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexDirection: 'column'
+        }}
+      >
         <Toolbar />
         <TextField
           id="filled-multiline-static"
@@ -102,7 +142,9 @@ export default function MainPage() {
           multiline
           minRows={1}
           variant="filled"
-          className={classes.textField}
+          sx={{
+            width: 900,
+          }}
           margin="normal"
         />
         <TextField
@@ -112,7 +154,9 @@ export default function MainPage() {
           multiline
           minRows={4}
           variant="filled"
-          className={classes.textField}
+          sx={{
+            width: 900,
+          }}
           margin="normal"
         />
         <TextField
@@ -122,7 +166,9 @@ export default function MainPage() {
           multiline
           minRows={15}
           variant="filled"
-          className={classes.textField}
+          sx={{
+            width: 900,
+          }}
           margin="normal"
         />
         <Button variant="outlined"
