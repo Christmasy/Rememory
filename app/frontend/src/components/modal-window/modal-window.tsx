@@ -39,13 +39,31 @@ export default function ModalWindow() {
             onClose={handleClose}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
-            classes={{ paper: "dialogPaper" }}
+            sx= {{
+              "& .MuiDialog-container": {
+                "& .MuiPaper-root": {
+                  '& .MuiDialogContent-root': {
+                    //paddingTop: '20px !important',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  },
+                  minWidth: "650px",  // Set your width here
+                },
+              },
+              minHeight: '450px',
+            }}
           >
-            <DialogTitle id="alert-dialog-title" className={classes.dialogTitle}>
+            <DialogTitle id="alert-dialog-title"
+              sx= {{
+                textAlign: 'center'
+              }}
+            >
               {"Новая поездка"}
             </DialogTitle>
             <DialogContent>
-              <DialogContentText id="alert-dialog-description" className={classes.dialogContentText}>
+              <DialogContentText id="alert-dialog-description">
                 Задайте параметры поездки
               </DialogContentText>
               <TextField
@@ -56,23 +74,28 @@ export default function ModalWindow() {
               />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
-                  <DatePicker label="Выберите дату начала поездки" />
+                  <DatePicker label="Дата начала поездки" />
                 </DemoContainer>
               </LocalizationProvider>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
-                  <DatePicker label="Выберите дату конца поездки" />
+                  <DatePicker label="Дата конца поездки" />
                 </DemoContainer>
               </LocalizationProvider>
             </DialogContent>
             <DialogActions>
               <Button variant="outlined" onClick={handleClose}
-                style={{border: '1px solid rgba(3, 116, 105, 1)',
-                color: 'rgba(3, 116, 105, 1)',
-                width: '200px',
-                margin: '0 auto',
-                marginBottom: '40px',
-                backgroundColor: 'rgba(255, 255, 255, 0.85)'}}>Сохранить</Button>
+                style={{
+                  border: '1px solid rgba(3, 116, 105, 1)',
+                  color: 'rgba(3, 116, 105, 1)',
+                  width: '200px',
+                  margin: '0 auto',
+                  marginBottom: '40px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.85)'
+                }}
+              >
+                Сохранить
+              </Button>
             </DialogActions>
         </Dialog>
     </>

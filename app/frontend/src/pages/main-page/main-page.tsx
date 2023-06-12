@@ -172,12 +172,14 @@ export default function MainPage() {
           margin="normal"
         />
         <Button variant="outlined"
-          style={{border: '1px solid rgba(3, 116, 105, 1)',
-          color: 'rgba(3, 116, 105, 1)',
-          width: '200px',
-          margin: '0 auto',
-          backgroundColor: 'rgba(255, 255, 255, 0.85)',
-          marginTop: '20px'}}>
+          style={{
+            border: '1px solid rgba(3, 116, 105, 1)',
+            color: 'rgba(3, 116, 105, 1)',
+            width: '200px',
+            margin: '0 auto',
+            backgroundColor: 'rgba(255, 255, 255, 0.85)',
+            marginTop: '20px'
+          }}>
             Сохранить
         </Button>
         <div>

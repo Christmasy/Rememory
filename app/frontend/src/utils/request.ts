@@ -31,20 +31,19 @@ export async function request(
     const accessToken = localStorage.getItem('accessToken');
     const decodedAccess = jwt_decode(accessToken!) as {exp: number};
 
-    if (decodedAccess.exp < Date.now()) {
-        const decodedRefresh = jwt_decode(localStorage.getItem('refreshToken')!) as {exp: number};
-
-        if (decodedRefresh.exp! < Date.now()) {
-            localStorage.removeItem('refreshToken');
-            localStorage.removeItem('accessToken');
-            return new NavigateResponse('/');
-        }
-        
+    if (decodedAccess.exp < Date.now()/1000) {
         const refreshResult = await fetch('/api/Auth/refresh', {
             method:'POST',
             body:JSON.stringify({refreshToken: localStorage.getItem('refreshToken'), deviceId: localStorage.getItem('deviceId')}),
             headers:{'Content-Type':'application/json'}
         });
+
+        if (!refreshResult.ok) {
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('accessToken');
+            return new NavigateResponse('/');
+        }
+
         const {accessToken, refreshToken} = await refreshResult.json();
         localStorage.setItem('refreshToken', refreshToken);
 
@@ -52,5 +51,11 @@ export async function request(
         return new UpdateTokensResponse(accessToken, result);
     }
 
-    return fetch(input, {...init, headers: {...init?.headers, 'Authorization': `Bearer ${accessToken}`}});
+    const result = await fetch(input, {...init, headers: {...init?.headers, 'Authorization': `Bearer ${accessToken}`}});
+    if (result.status === 401) {
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('accessToken');
+        return new NavigateResponse('/');
+    }
+    return result;
 }
