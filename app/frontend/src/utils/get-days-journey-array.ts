@@ -10,6 +10,5 @@ export default function getDaysJourneyArray(start: dayjs.Dayjs, end: dayjs.Dayjs
       daysJourneyArray.push(dayJourney);
       dayCounter++;
     }
-    //console.log(daysJourneyArray)
     return daysJourneyArray;
 }

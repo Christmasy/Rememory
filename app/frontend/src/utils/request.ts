@@ -48,7 +48,6 @@ export async function request(
         localStorage.setItem('refreshToken', refreshToken);
 
         const result = await fetch(input, {...init, headers: {...init?.headers, 'Authorization': `Bearer ${accessToken}`}});
-        console.log(accessToken);
         return new UpdateTokensResponse(accessToken, result);
     }
 

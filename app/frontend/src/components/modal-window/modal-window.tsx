@@ -5,7 +5,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import * as React from 'react';
-import { TextField } from '@mui/material';
+import { TextField, Snackbar, Alert } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
@@ -24,11 +24,19 @@ async function createJourney(
   end: Dayjs,
   navigate: NavigateFunction,
   setNewState: any,
-  handleClose: () => void
+  handleClose: () => void,
+  setTitleError: (hasTitleError: boolean) => void,
+  setDateError: (hasDateError: boolean) => void
 ){
-  withAuth(navigate, setNewState, () => addJourney(title, start, end)).then(async (res) => {
-    console.log(await res?.text())
-  });
+  if(title === "") {
+    setTitleError(true);
+    return;
+  }
+  const journeyRes = await withAuth(navigate, setNewState, () => addJourney(title, start, end));
+  if(journeyRes!.status === 422) {
+    setDateError(true);
+    return;
+  }
   handleClose();
 }
 
@@ -36,6 +44,9 @@ export default function ModalWindow() {
   const [title, setTitle] = useState('');
   const [start, setStart] = useState(dayjs(new Date(Date.now())));
   const [end, setEnd] = useState(dayjs(new Date(Date.now())));
+  const [hasTitleError, setTitleError] = useState(false);
+  const [hasDateError, setDateError] = useState(false);
+
   const navigate = useNavigate();
   const {setNewState} = useContext(appContext);
 
@@ -122,7 +133,7 @@ export default function ModalWindow() {
         </DialogContent>
         <DialogActions>
           <Button variant="outlined"
-            onClick={() => createJourney(title, start, end, navigate, setNewState, handleClose)}
+            onClick={() => createJourney(title, start, end, navigate, setNewState, handleClose, setTitleError, setDateError)}
             style={{
               border: '1px solid rgba(3, 116, 105, 1)',
               color: 'rgba(3, 116, 105, 1)',
@@ -134,6 +145,16 @@ export default function ModalWindow() {
           >
             Сохранить
           </Button>
+          <Snackbar open={hasTitleError} autoHideDuration={3000} onClose={() => setTitleError(false)}>
+            <Alert severity="error" sx={{ width: '100%' }}>
+              Заголовок не может быть пустым.
+            </Alert>
+          </Snackbar>
+          <Snackbar open={hasDateError} autoHideDuration={3000} onClose={() => setDateError(false)}>
+            <Alert severity="error" sx={{ width: '100%' }}>
+              Данные даты для поездки уже заняты. Попробуйте другие.
+            </Alert>
+          </Snackbar>
         </DialogActions>
       </Dialog>
     </>

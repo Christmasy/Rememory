@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { appContext } from '../../components/app-context/app-context';
 // @ts-ignore
 import background from '../../img/left.png';
-import getDaysJourneyArray from '../../utils/getDaysJourneyArray';
+import getDaysJourneyArray from '../../utils/get-days-journey-array';
 import { Journey } from '../../models/journey';
 
 export default function MainPage() {
@@ -81,17 +81,6 @@ export default function MainPage() {
             <div>
             <Button
               variant="outlined"
-              startIcon={<SettingsIcon />}
-              style={{
-                border: '1px solid rgba(255, 255, 255, 0.5)',
-                color: 'rgba(255, 255, 255, 1)',
-                marginRight: '10px'
-              }}
-            >
-              Настройки
-            </Button>
-            <Button
-              variant="outlined"
               startIcon={<AccountCircleIcon />}
               style={{
                 border: '1px solid rgba(255, 255, 255, 0.5)',
@@ -136,15 +125,14 @@ export default function MainPage() {
               }}
           >
               {
-                journeys.map((journey: any, id) => {
+                journeys.map((journey: any) => {
                     //id += journey.days.length;
-                    id += 1;
+                    const journeyDays = getDaysJourneyArray(journey.start, journey.end);
                     return (
-                      <TreeItem nodeId={`${id}`} label={journey.title}>
+                      <TreeItem nodeId={journey.id} key={journey.id} label={journey.title}>
                         {
-                          getDaysJourneyArray(journey.start, journey.end).map((day: any) => {
-                              id += 1;
-                              return (<TreeItem nodeId={`${id}`} label={day} />);
+                          journeyDays.map((day: any) => {
+                              return (<TreeItem nodeId={day} key={day} label={day} />);
                             }
                           )
                         }
