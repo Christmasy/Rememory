@@ -6,6 +6,10 @@ export const getCurrentUser = async (): Promise<NavigateResponse | UpdateTokensR
   return request('/api/Users/current', {headers:{'Content-Type':'application/json'}});
 };
 
+export const getJourneys = async (): Promise<NavigateResponse | UpdateTokensResponse | Response> => {
+  return request('/api/Journeys', {headers:{'Content-Type':'application/json'}});
+};
+
 export const addJourney = async (title: string, start: dayjs.Dayjs, end: dayjs.Dayjs): Promise<NavigateResponse | UpdateTokensResponse | Response> => {
   return request('/api/Journeys', {
     method:'POST',

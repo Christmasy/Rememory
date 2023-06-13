@@ -10,26 +10,46 @@ import Button from '@mui/material/Button';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useEffect, useState, useContext } from "react";
-import { getCurrentUser } from "../../server-api/server-api";
-//import useStyles from './main-page-styles';
+import { getJourneys, getCurrentUser } from "../../server-api/server-api";
 import { withAuth } from '../../utils/auth';
 import { useNavigate } from 'react-router-dom';
 import { appContext } from '../../components/app-context/app-context';
 // @ts-ignore
 import background from '../../img/left.png';
+import getDaysJourneyArray from '../../utils/getDaysJourneyArray';
+import { Journey } from '../../models/journey';
 
 export default function MainPage() {
     const [date, setDate] = useState<string>('');
     const [description, setDescription] = useState<string>('');
     const [visitedPlaces, setVisitedPlaces] = useState<string>('');
 
+    const [journeys, setJourenys] = useState([]);
+    const [userName, setUserName] = useState<string>('Аноним');
+
     const navigate = useNavigate();
     const {setNewState} = useContext(appContext);
 
     useEffect(() => {
-      withAuth(navigate, setNewState, getCurrentUser).then(async (res) => {
-        console.log(await res?.text());
-      });
+      async function fetchData() {
+        const journeysRes = await withAuth(navigate, setNewState, getJourneys);
+        const journeys = await journeysRes!.json();
+        setJourenys(journeys.map((journey: any) => new Journey(
+              journey.id,
+              journey.userId, 
+              journey.title,
+              journey.start,
+              journey.end
+            )
+          )
+        );
+        const userRes = await withAuth(navigate, setNewState, getCurrentUser);
+        const user = await userRes!.json();
+        if(user.firstName !== undefined && user.lastName !== undefined) {
+          setUserName(`${user.firstName} ${user.lastName}`);
+        }
+      }
+      fetchData();
       /*getUsers().then((res) => {
         console.log(res);
         console.log(res.status);
@@ -78,7 +98,7 @@ export default function MainPage() {
                 color: 'rgba(255, 255, 255, 1)'
               }}
             >
-              Юлия Алексеева
+              {userName}
             </Button>
             </div>
         </Toolbar>
@@ -115,13 +135,24 @@ export default function MainPage() {
                 color: '#FFFFFF'
               }}
           >
-              <TreeItem nodeId="1" label="Франция, Париж, 2013">
-              </TreeItem>
-              <TreeItem nodeId="5" label="Италия, 2010">
-                  <TreeItem nodeId="10" label="День 1. 24.11.2010" />
-                  <TreeItem nodeId="6" label="День 2. 25.11.2010" />
-                  <TreeItem nodeId="8" label="День 3. 26.11.2010" />
-              </TreeItem>
+              {
+                journeys.map((journey: any, id) => {
+                    //id += journey.days.length;
+                    id += 1;
+                    return (
+                      <TreeItem nodeId={`${id}`} label={journey.title}>
+                        {
+                          getDaysJourneyArray(journey.start, journey.end).map((day: any) => {
+                              id += 1;
+                              return (<TreeItem nodeId={`${id}`} label={day} />);
+                            }
+                          )
+                        }
+                      </TreeItem>
+                    )
+                  }
+                )
+              }
           </TreeView>
         </div>
       </Drawer>
