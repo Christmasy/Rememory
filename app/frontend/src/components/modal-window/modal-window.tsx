@@ -6,14 +6,39 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import * as React from 'react';
 import { TextField } from '@mui/material';
-import { useStyles } from './modal-window-styles';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs, { Dayjs } from 'dayjs';
+import { withAuth } from '../../utils/auth';
+import { appContext } from '../../components/app-context/app-context';
+import { useEffect, useState, useContext } from "react";
+import { NavigateFunction } from 'react-router-dom';
+import { addJourney } from "../../server-api/server-api";
+import { useNavigate } from 'react-router-dom';
+
+async function createJourney(
+  title: string,
+  start: Dayjs,
+  end: Dayjs,
+  navigate: NavigateFunction,
+  setNewState: any,
+  handleClose: () => void
+){
+  withAuth(navigate, setNewState, () => addJourney(title, start, end)).then(async (res) => {
+    console.log(await res?.text())
+  });
+  handleClose();
+}
 
 export default function ModalWindow() {
-  const classes = useStyles();
+  const [title, setTitle] = useState('');
+  const [start, setStart] = useState(dayjs(new Date(Date.now())));
+  const [end, setEnd] = useState(dayjs(new Date(Date.now())));
+  const navigate = useNavigate();
+  const {setNewState} = useContext(appContext);
+
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
       setOpen(true);
@@ -24,80 +49,93 @@ export default function ModalWindow() {
   };
   return (
     <>
-    <Button variant="outlined" onClick={handleClickOpen}
-     style={{border: '1px solid rgba(3, 116, 105, 1)',
-     color: 'rgba(3, 116, 105, 1)',
-     width: '300px',
-     margin: '0 auto',
-     marginTop: '40px',
-     marginBottom: '30px',
-     backgroundColor: 'rgba(255, 255, 255, 0.85)'}}>
-            Добавить новую поездку
-          </Button>
-          <Dialog
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-            sx= {{
-              "& .MuiDialog-container": {
-                "& .MuiPaper-root": {
-                  '& .MuiDialogContent-root': {
-                    //paddingTop: '20px !important',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                  },
-                  minWidth: "650px",  // Set your width here
-                },
+      <Button variant="outlined" onClick={handleClickOpen}
+        style={{
+          border: '1px solid rgba(3, 116, 105, 1)',
+          color: 'rgba(3, 116, 105, 1)',
+          width: '300px',
+          margin: '0 auto',
+          marginTop: '40px',
+          marginBottom: '30px',
+          backgroundColor: 'rgba(255, 255, 255, 0.85)'
+        }}
+      >
+        Добавить новую поездку
+      </Button>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        sx= {{
+          "& .MuiDialog-container": {
+            "& .MuiPaper-root": {
+              '& .MuiDialogContent-root': {
+                //paddingTop: '20px !important',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center'
               },
-              minHeight: '450px',
+              minWidth: "650px",  // Set your width here
+            },
+          },
+          minHeight: '450px',
+        }}
+      >
+        <DialogTitle id="alert-dialog-title"
+          sx= {{
+            textAlign: 'center'
+          }}
+        >
+          {"Новая поездка"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Задайте параметры поездки
+          </DialogContentText>
+          <TextField
+            id="input-slot"
+            label="Название поездки"
+            type="input"
+            variant="standard"
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={['DatePicker']}>
+              <DatePicker
+                label="Дата начала поездки"
+                value={start}
+                onChange={(newStart) => setStart(newStart!)}
+              />
+            </DemoContainer>
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={['DatePicker']}>
+              <DatePicker
+                label="Дата конца поездки"
+                value={end}
+                onChange={(newEnd) => setEnd(newEnd!)}
+              />
+            </DemoContainer>
+          </LocalizationProvider>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined"
+            onClick={() => createJourney(title, start, end, navigate, setNewState, handleClose)}
+            style={{
+              border: '1px solid rgba(3, 116, 105, 1)',
+              color: 'rgba(3, 116, 105, 1)',
+              width: '200px',
+              margin: '0 auto',
+              marginBottom: '40px',
+              backgroundColor: 'rgba(255, 255, 255, 0.85)'
             }}
           >
-            <DialogTitle id="alert-dialog-title"
-              sx= {{
-                textAlign: 'center'
-              }}
-            >
-              {"Новая поездка"}
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                Задайте параметры поездки
-              </DialogContentText>
-              <TextField
-                id="input-slot"
-                label="Название поездки"
-                type="input"
-                variant="standard"
-              />
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker']}>
-                  <DatePicker label="Дата начала поездки" />
-                </DemoContainer>
-              </LocalizationProvider>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker']}>
-                  <DatePicker label="Дата конца поездки" />
-                </DemoContainer>
-              </LocalizationProvider>
-            </DialogContent>
-            <DialogActions>
-              <Button variant="outlined" onClick={handleClose}
-                style={{
-                  border: '1px solid rgba(3, 116, 105, 1)',
-                  color: 'rgba(3, 116, 105, 1)',
-                  width: '200px',
-                  margin: '0 auto',
-                  marginBottom: '40px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.85)'
-                }}
-              >
-                Сохранить
-              </Button>
-            </DialogActions>
-        </Dialog>
+            Сохранить
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

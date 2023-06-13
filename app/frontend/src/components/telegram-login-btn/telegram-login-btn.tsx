@@ -42,7 +42,6 @@ export class TelegramLoginButton extends React.Component<Props> {
     window.TelegramLoginWidget = {
       dataOnauth: (user: any) => {
         dataOnauth && dataOnauth(user);
-        console.log(this.context);
         login(user, this.props.navigate, this.context.setNewState);
       },
     };

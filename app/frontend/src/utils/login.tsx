@@ -14,8 +14,6 @@ export async function login(
   navigate: NavigateFunction,
   setState: (acessToken: string) => void,
 ){
-  console.log('q');
-  console.log(user);
   let deviceId = localStorage.getItem('deviceId');
   if(!deviceId) {
     deviceId = getDeviceId();
