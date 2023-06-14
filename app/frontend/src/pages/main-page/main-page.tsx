@@ -7,10 +7,9 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
 import ModalWindow from '../../components/modal-window/modal-window';
 import Button from '@mui/material/Button';
-import SettingsIcon from '@mui/icons-material/Settings';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useEffect, useState, useContext } from "react";
-import { getJourneys, getCurrentUser } from "../../server-api/server-api";
+import { getJourneys, getCurrentUser, getTextNotes, getVisitedPlaces } from "../../server-api/server-api";
 import { withAuth } from '../../utils/auth';
 import { useNavigate } from 'react-router-dom';
 import { appContext } from '../../components/app-context/app-context';
@@ -18,17 +17,40 @@ import { appContext } from '../../components/app-context/app-context';
 import background from '../../img/left.png';
 import getDaysJourneyArray from '../../utils/get-days-journey-array';
 import { Journey } from '../../models/journey';
+import dayjs from 'dayjs';
+import dayjsToVizualizeFormat from '../../utils/dayjs-to-visualize-format';
 
 export default function MainPage() {
     const [date, setDate] = useState<string>('');
-    const [description, setDescription] = useState<string>('');
+    const [textNotes, setTextNotes] = useState([]);
     const [visitedPlaces, setVisitedPlaces] = useState<string>('');
+
+    const [isChoosedDay, setIsChoosedDay] = useState<boolean>(false);
 
     const [journeys, setJourenys] = useState([]);
     const [userName, setUserName] = useState<string>('Аноним');
 
     const navigate = useNavigate();
     const {setNewState} = useContext(appContext);
+
+    const handleTreeItemClick = async (day: dayjs.Dayjs, formattedDay: string) => {
+      console.log(day);
+      setIsChoosedDay(true);
+      setDate(formattedDay);
+      const textNotesRes = await withAuth(navigate, setNewState, () => getTextNotes(day));
+      const textNotes = (await textNotesRes!.json()).map((textNote: any) => textNote.content);
+      console.log(textNotesRes);
+      console.log(textNotes);
+      if(textNotes.length > 0) {
+        setTextNotes(textNotes);
+      } else {
+        let defaultArray = [""];
+        setTextNotes(defaultArray as any);
+      }
+      const visitedPlacesRes = await withAuth(navigate, setNewState, () => getVisitedPlaces(day));
+      const visitedPlaces = (await visitedPlacesRes!.json()).map((visitedPlace: any) => visitedPlace.title).join(', ');
+      setVisitedPlaces(visitedPlaces);
+    }
 
     useEffect(() => {
       async function fetchData() {
@@ -50,19 +72,6 @@ export default function MainPage() {
         }
       }
       fetchData();
-      /*getUsers().then((res) => {
-        console.log(res);
-        console.log(res.status);
-        console.log(res.json());
-        if (res.status === 200) {
-          res.json().then(({id, journeyId, date, visitedPlaces, description
-                            }) => {
-            setDate(date);
-            setVisitedPlaces(visitedPlaces);
-            setDescription(description);
-          });
-        }
-      });*/
     }, []);
 
   return (
@@ -126,13 +135,23 @@ export default function MainPage() {
           >
               {
                 journeys.map((journey: any) => {
-                    //id += journey.days.length;
                     const journeyDays = getDaysJourneyArray(journey.start, journey.end);
                     return (
                       <TreeItem nodeId={journey.id} key={journey.id} label={journey.title}>
                         {
-                          journeyDays.map((day: any) => {
-                              return (<TreeItem nodeId={day} key={day} label={day} />);
+                          journeyDays.map((day: any, index: number) => {
+                            const formattedDay = dayjsToVizualizeFormat(day, index + 1);
+                              return (<TreeItem
+                                  nodeId={day}
+                                  key={day}
+                                  label={
+                                    <div onClick={event => event.stopPropagation()}>
+                                      <div onClick={(e:any) => handleTreeItemClick(day, formattedDay)}>
+                                        {formattedDay}
+                                      </div>
+                                    </div>
+                                  }
+                                />);
                             }
                           )
                         }
@@ -154,53 +173,66 @@ export default function MainPage() {
         }}
       >
         <Toolbar />
-        <TextField
-          id="filled-multiline-static"
-          value={date}
-          label="Дата"
-          multiline
-          minRows={1}
-          variant="filled"
-          sx={{
-            width: 900,
-          }}
-          margin="normal"
-        />
-        <TextField
-          id="filled-multiline-static"
-          value={visitedPlaces}
-          label="Место"
-          multiline
-          minRows={4}
-          variant="filled"
-          sx={{
-            width: 900,
-          }}
-          margin="normal"
-        />
-        <TextField
-          id="filled-multiline-static"
-          value={description}
-          label="Расскажите о событиях"
-          multiline
-          minRows={15}
-          variant="filled"
-          sx={{
-            width: 900,
-          }}
-          margin="normal"
-        />
-        <Button variant="outlined"
-          style={{
-            border: '1px solid rgba(3, 116, 105, 1)',
-            color: 'rgba(3, 116, 105, 1)',
-            width: '200px',
-            margin: '0 auto',
-            backgroundColor: 'rgba(255, 255, 255, 0.85)',
-            marginTop: '20px'
-          }}>
-            Сохранить
-        </Button>
+        {
+          isChoosedDay ? (
+            <>
+              <TextField
+                id="filled-multiline-static"
+                value={date}
+                label="Дата"
+                multiline
+                minRows={1}
+                variant="filled"
+                sx={{
+                  width: 900,
+                }}
+                margin="normal"
+              />
+              <TextField
+                id="filled-multiline-static"
+                value={visitedPlaces}
+                label="Места"
+                multiline
+                minRows={2}
+                variant="filled"
+                sx={{
+                  width: 900,
+                }}
+                margin="normal"
+              />
+              {
+                textNotes.map((textNote) => (
+                  <TextField
+                    id="filled-multiline-static"
+                    value={textNote}
+                    label="Расскажите о событиях"
+                    multiline
+                    minRows={15}
+                    variant="filled"
+                    sx={{
+                      width: 900,
+                    }}
+                    margin="normal"
+                  />
+                ))
+              }
+              <Button variant="outlined"
+                style={{
+                  border: '1px solid rgba(3, 116, 105, 1)',
+                  color: 'rgba(3, 116, 105, 1)',
+                  width: '200px',
+                  margin: '0 auto',
+                  backgroundColor: 'rgba(255, 255, 255, 0.85)',
+                  marginTop: '20px'
+                }}>
+                  Сохранить
+              </Button>
+            </>
+          ) : (
+            <></>
+          )
+        }
+        
         <div>
       </div>
       </main>

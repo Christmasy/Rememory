@@ -1,4 +1,3 @@
-import { NavigateFunction } from "react-router-dom";
 import dayjs from 'dayjs';
 import { NavigateResponse, UpdateTokensResponse, request } from "../utils/request";
 
@@ -15,5 +14,17 @@ export const addJourney = async (title: string, start: dayjs.Dayjs, end: dayjs.D
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body: JSON.stringify({title, start, end})
+  });
+};
+
+export const getTextNotes = async (date: dayjs.Dayjs): Promise<NavigateResponse | UpdateTokensResponse | Response> => {
+  return request(`/api/Notes/textNote/${date}`, {
+    headers:{'Content-Type':'application/json'}
+  });
+};
+
+export const getVisitedPlaces = async (date: dayjs.Dayjs): Promise<NavigateResponse | UpdateTokensResponse | Response> => {
+  return request(`/api/VisitedPlaces/${date}`, {
+    headers:{'Content-Type':'application/json'}
   });
 };

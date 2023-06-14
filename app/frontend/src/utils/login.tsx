@@ -25,6 +25,7 @@ export async function login(
     headers:{'Content-Type':'application/json', 'DeviceId':deviceId}
   });
   const {accessToken, refreshToken} = await result.json();
+  console.log(accessToken);
   setState(accessToken);
   localStorage.setItem('refreshToken', refreshToken);
   navigate('/main');

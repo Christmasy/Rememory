@@ -1,10 +1,4 @@
 import jwt_decode from "jwt-decode";
-import { NavigateFunction } from 'react-router-dom';
-
-/*export function jwtDecode(token: string) {
-    const base64 = token.split(".");
-    const
-}*/
 
 export class NavigateResponse {
     public readonly path: string;
@@ -46,6 +40,8 @@ export async function request(
 
         const {accessToken, refreshToken} = await refreshResult.json();
         localStorage.setItem('refreshToken', refreshToken);
+        //console.log('aaa');
+        //console.log(accessToken);
 
         const result = await fetch(input, {...init, headers: {...init?.headers, 'Authorization': `Bearer ${accessToken}`}});
         return new UpdateTokensResponse(accessToken, result);
