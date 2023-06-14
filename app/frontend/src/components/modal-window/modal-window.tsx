@@ -110,14 +110,14 @@ export default function ModalWindow() {
             label="Название поездки"
             type="input"
             variant="standard"
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={e => setTitle(e.target.value)}
           />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['DatePicker']}>
               <DatePicker
                 label="Дата начала поездки"
                 value={start}
-                onChange={(newStart) => setStart(newStart!)}
+                onChange={newStart => setStart(newStart!)}
               />
             </DemoContainer>
           </LocalizationProvider>
@@ -126,7 +126,7 @@ export default function ModalWindow() {
               <DatePicker
                 label="Дата конца поездки"
                 value={end}
-                onChange={(newEnd) => setEnd(newEnd!)}
+                onChange={newEnd => setEnd(newEnd!)}
               />
             </DemoContainer>
           </LocalizationProvider>

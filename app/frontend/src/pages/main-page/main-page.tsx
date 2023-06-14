@@ -34,22 +34,24 @@ export default function MainPage() {
     const {setNewState} = useContext(appContext);
 
     const handleTreeItemClick = async (day: dayjs.Dayjs, formattedDay: string) => {
-      console.log(day);
       setIsChoosedDay(true);
       setDate(formattedDay);
+      setTextNotes([]);
       const textNotesRes = await withAuth(navigate, setNewState, () => getTextNotes(day));
       const textNotes = (await textNotesRes!.json()).map((textNote: any) => textNote.content);
-      console.log(textNotesRes);
-      console.log(textNotes);
-      if(textNotes.length > 0) {
-        setTextNotes(textNotes);
-      } else {
-        let defaultArray = [""];
-        setTextNotes(defaultArray as any);
+      if(textNotes.length === 0) {
+        textNotes.push("");
       }
+      setTextNotes(textNotes);
       const visitedPlacesRes = await withAuth(navigate, setNewState, () => getVisitedPlaces(day));
       const visitedPlaces = (await visitedPlacesRes!.json()).map((visitedPlace: any) => visitedPlace.title).join(', ');
       setVisitedPlaces(visitedPlaces);
+    }
+
+    const updateCurTextNote = (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      let newArr : string[]  = [...textNotes];
+      newArr[index] = e.target.value;
+      setTextNotes(newArr as any);
     }
 
     useEffect(() => {
@@ -146,7 +148,7 @@ export default function MainPage() {
                                   key={day}
                                   label={
                                     <div onClick={event => event.stopPropagation()}>
-                                      <div onClick={(e:any) => handleTreeItemClick(day, formattedDay)}>
+                                      <div onClick={() => handleTreeItemClick(day, formattedDay)}>
                                         {formattedDay}
                                       </div>
                                     </div>
@@ -186,6 +188,10 @@ export default function MainPage() {
                 sx={{
                   width: 900,
                 }}
+                InputProps={{
+                  readOnly: true,
+                  disableUnderline: true
+                }}
                 margin="normal"
               />
               <TextField
@@ -193,21 +199,26 @@ export default function MainPage() {
                 value={visitedPlaces}
                 label="Места"
                 multiline
-                minRows={2}
+                minRows={1}
                 variant="filled"
                 sx={{
                   width: 900,
                 }}
+                InputProps={{
+                  readOnly: true,
+                  disableUnderline: true
+                }}
                 margin="normal"
               />
               {
-                textNotes.map((textNote) => (
+                textNotes.map((textNote, index) => (
                   <TextField
                     id="filled-multiline-static"
-                    value={textNote}
+                    defaultValue={textNote}
+                    onChange={updateCurTextNote(index)}
                     label="Расскажите о событиях"
                     multiline
-                    minRows={15}
+                    minRows={8}
                     variant="filled"
                     sx={{
                       width: 900,
