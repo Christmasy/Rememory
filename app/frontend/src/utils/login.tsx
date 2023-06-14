@@ -1,5 +1,6 @@
 import { NavigateFunction } from 'react-router-dom';
 import { getDeviceId } from './generate-deviceId';
+import { BASE_API } from './url';
 
 export async function login(
   user: {
@@ -19,7 +20,7 @@ export async function login(
     deviceId = getDeviceId();
     localStorage.setItem('deviceId', deviceId);
   }
-  const result = await fetch('/api/Auth/login', {
+  const result = await fetch(`${BASE_API}/api/Auth/login`, {
     method:'POST',
     body:JSON.stringify(user),
     headers:{'Content-Type':'application/json', 'DeviceId':deviceId}

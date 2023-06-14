@@ -1,4 +1,5 @@
 import jwt_decode from "jwt-decode";
+import { BASE_API } from "./url";
 
 export class NavigateResponse {
     public readonly path: string;
@@ -26,7 +27,7 @@ export async function request(
     const decodedAccess = jwt_decode(accessToken!) as {exp: number};
 
     if (decodedAccess.exp < Date.now()/1000) {
-        const refreshResult = await fetch('/api/Auth/refresh', {
+        const refreshResult = await fetch(`${BASE_API}/api/Auth/refresh`, {
             method:'POST',
             body:JSON.stringify({refreshToken: localStorage.getItem('refreshToken'), deviceId: localStorage.getItem('deviceId')}),
             headers:{'Content-Type':'application/json'}
