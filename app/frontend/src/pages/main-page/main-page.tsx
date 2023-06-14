@@ -53,7 +53,8 @@ export default function MainPage() {
         )
       );
       if(textNotes.length === 0) {
-        const updatedTextNoteRes = await (await withAuth(navigate, setNewState, () => postOneTextNote(dayjs(), "")))!.json();
+        const now = dayjs()
+        const updatedTextNoteRes = await (await withAuth(navigate, setNewState, () => postOneTextNote(now, "")))!.json();
         const updatedTextNote = new TextNote(
           updatedTextNoteRes.id,
           updatedTextNoteRes.content
