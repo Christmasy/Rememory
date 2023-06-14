@@ -9,7 +9,7 @@ import ModalWindow from '../../components/modal-window/modal-window';
 import Button from '@mui/material/Button';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useEffect, useState, useContext } from "react";
-import { getJourneys, getCurrentUser, getTextNotes, getVisitedPlaces } from "../../server-api/server-api";
+import { getJourneys, getCurrentUser, getTextNotes, getVisitedPlaces, postOneTextNote, putTextNotes } from "../../server-api/server-api";
 import { withAuth } from '../../utils/auth';
 import { useNavigate } from 'react-router-dom';
 import { appContext } from '../../components/app-context/app-context';
@@ -17,13 +17,22 @@ import { appContext } from '../../components/app-context/app-context';
 import background from '../../img/left.png';
 import getDaysJourneyArray from '../../utils/get-days-journey-array';
 import { Journey } from '../../models/journey';
+import { TextNote } from '../../models/text-note';
 import dayjs from 'dayjs';
 import dayjsToVizualizeFormat from '../../utils/dayjs-to-visualize-format';
 
+async function updateTextFields(
+  textNotes: any[]
+){
+  textNotes.forEach((textNote) => {
+    putTextNotes(textNote.id, textNote.content);
+  });
+}
+
 export default function MainPage() {
     const [date, setDate] = useState<string>('');
-    const [textNotes, setTextNotes] = useState([]);
     const [visitedPlaces, setVisitedPlaces] = useState<string>('');
+    const [textNotes, setTextNotes] = useState([]);
 
     const [isChoosedDay, setIsChoosedDay] = useState<boolean>(false);
 
@@ -38,9 +47,18 @@ export default function MainPage() {
       setDate(formattedDay);
       setTextNotes([]);
       const textNotesRes = await withAuth(navigate, setNewState, () => getTextNotes(day));
-      const textNotes = (await textNotesRes!.json()).map((textNote: any) => textNote.content);
+      const textNotes = (await textNotesRes!.json()).map((textNote: any) => new TextNote(
+          textNote.id,
+          textNote.content
+        )
+      );
       if(textNotes.length === 0) {
-        textNotes.push("");
+        const updatedTextNoteRes = await (await withAuth(navigate, setNewState, () => postOneTextNote(dayjs(), "")))!.json();
+        const updatedTextNote = new TextNote(
+          updatedTextNoteRes.id,
+          updatedTextNoteRes.content
+        );
+        textNotes.push(updatedTextNote);
       }
       setTextNotes(textNotes);
       const visitedPlacesRes = await withAuth(navigate, setNewState, () => getVisitedPlaces(day));
@@ -49,8 +67,8 @@ export default function MainPage() {
     }
 
     const updateCurTextNote = (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      let newArr : string[]  = [...textNotes];
-      newArr[index] = e.target.value;
+      let newArr : TextNote[]  = [...textNotes];
+      newArr[index].content = e.target.value;
       setTextNotes(newArr as any);
     }
 
@@ -118,7 +136,8 @@ export default function MainPage() {
             width: 350,
             backgroundImage: `url(${background})`,
             display: 'flex',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            height: '100%'
           }}
         >
           <ModalWindow/>
@@ -180,6 +199,7 @@ export default function MainPage() {
             <>
               <TextField
                 id="filled-multiline-static"
+                key={"1"}
                 value={date}
                 label="Дата"
                 multiline
@@ -196,6 +216,7 @@ export default function MainPage() {
               />
               <TextField
                 id="filled-multiline-static"
+                key={"2"}
                 value={visitedPlaces}
                 label="Места"
                 multiline
@@ -211,23 +232,26 @@ export default function MainPage() {
                 margin="normal"
               />
               {
-                textNotes.map((textNote, index) => (
-                  <TextField
-                    id="filled-multiline-static"
-                    defaultValue={textNote}
-                    onChange={updateCurTextNote(index)}
-                    label="Расскажите о событиях"
-                    multiline
-                    minRows={8}
-                    variant="filled"
-                    sx={{
-                      width: 900,
-                    }}
-                    margin="normal"
-                  />
-                ))
+                textNotes.map((textNote: any, index) =>  (
+                    <TextField
+                      id={textNote.id}
+                      key={textNote.id}
+                      defaultValue={textNote.content}
+                      onChange={updateCurTextNote(index)}
+                      label="Расскажите о событиях"
+                      multiline
+                      minRows={8}
+                      variant="filled"
+                      sx={{
+                        width: 900,
+                      }}
+                      margin="normal"
+                    />
+                  )
+                )
               }
               <Button variant="outlined"
+                onClick={() => updateTextFields(textNotes)}
                 style={{
                   border: '1px solid rgba(3, 116, 105, 1)',
                   color: 'rgba(3, 116, 105, 1)',

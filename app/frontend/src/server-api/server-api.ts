@@ -28,3 +28,19 @@ export const getVisitedPlaces = async (date: dayjs.Dayjs): Promise<NavigateRespo
     headers:{'Content-Type':'application/json'}
   });
 };
+
+export const postOneTextNote = async (date: dayjs.Dayjs, content: string): Promise<NavigateResponse | UpdateTokensResponse | Response> => {
+  return request(`/api/Notes/textNote`, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({date, content})
+  });
+};
+
+export const putTextNotes = async (id: string, content: string): Promise<NavigateResponse | UpdateTokensResponse | Response> => {
+  return request(`/api/Notes/textNote/${id}`, {
+    method:'PUT',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({content})
+  });
+};
